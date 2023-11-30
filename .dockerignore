@@ -1,0 +1,11 @@
+# Docker files
+.dockerignore
+docker-compose.yml
+Dockerfile.dev
+
+# Git files
+.gitignore
+
+# README files
+README.md
+SETUP.md
