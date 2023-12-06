@@ -21,7 +21,7 @@ wsl --install -d Ubuntu-22.04
 
 ### Install Docker Desktop
 
-Download the installation files [here](https://www.docker.com/products/docker-desktop/).
+Download the installation files [here](https://www.docker.com/products/docker-desktop).
 
 ### Go Setup for Local Development
 
@@ -47,3 +47,14 @@ docker-compose down
 #### Run manually without docker-compose
 
 To run manually please use [this guide](/docs/docker_setup.md).
+
+#### Run database-only automatically with docker-compose (for quick debugging purposes)
+
+Run all
+```
+docker-compose -f docker-compose-db.yml up -d
+```
+Shut down all
+```
+docker-compose down
+```

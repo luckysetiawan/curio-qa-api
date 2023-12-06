@@ -5,6 +5,7 @@ go 1.21.4
 require github.com/gorilla/mux v1.8.1
 
 require (
+	github.com/joho/godotenv v1.5.1
 	github.com/redis/go-redis/v9 v9.3.0
 	github.com/rs/cors v1.10.1
 	go.mongodb.org/mongo-driver v1.13.0
