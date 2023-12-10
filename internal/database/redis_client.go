@@ -9,19 +9,11 @@ import (
 )
 
 func NewRedisClient() *redis.Client {
-	var (
-		redisHost    string
-		redisPort    string
-		redisAddress string
-		ctx          context.Context
-		err          error
-	)
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+	redisAddress := fmt.Sprintf("%s:%s", redisHost, redisPort)
 
-	redisHost = os.Getenv("REDIS_HOST")
-	redisPort = os.Getenv("REDIS_PORT")
-	redisAddress = fmt.Sprintf("%s:%s", redisHost, redisPort)
-
-	ctx = context.Background()
+	ctx := context.Background()
 
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     redisAddress,
@@ -29,7 +21,7 @@ func NewRedisClient() *redis.Client {
 		DB:       0,
 	})
 
-	err = rdb.Ping(ctx).Err()
+	err := rdb.Ping(ctx).Err()
 	if err != nil {
 		fmt.Println("Redis: ", err.Error())
 	}

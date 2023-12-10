@@ -21,17 +21,13 @@ func NewServerStatusRepository(mongoClient *mongo.Client, redisClient *redis.Cli
 	}
 }
 
-func (r *serverStatusRepo) GetServerStatus() (serverStatus entity.ServerStatus) {
-	var (
-		ctx    context.Context
-		cancel context.CancelFunc
-		err    error
-	)
+func (r *serverStatusRepo) GetServerStatus() entity.ServerStatus {
+	var serverStatus entity.ServerStatus
 
-	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	err = r.mongoClient.Ping(ctx, nil)
+	err := r.mongoClient.Ping(ctx, nil)
 	if err == nil {
 		serverStatus.MongoStatus = true
 	}
@@ -41,5 +37,5 @@ func (r *serverStatusRepo) GetServerStatus() (serverStatus entity.ServerStatus) 
 		serverStatus.RedisStatus = true
 	}
 
-	return
+	return serverStatus
 }

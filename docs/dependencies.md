@@ -22,6 +22,7 @@ go get github.com/gorilla/mux
 go get github.com/rs/cors
 go get go.mongodb.org/mongo-driver/mongo
 go get github.com/redis/go-redis/v9
+go get golang.org/x/crypto
 ```
 Packages docs:
 1. godotenv: [docs](https://github.com/joho/godotenv)
@@ -29,3 +30,4 @@ Packages docs:
 1. rs/cors: [docs](https://github.com/rs/cors)
 1. mongo-driver/mongo: [docs](https://github.com/mongodb/mongo-go-driver)
 1. go-redis/v9: [docs](https://github.com/redis/go-redis)
+1. x/crypto: [docs](https://pkg.go.dev/golang.org/x/crypto)
