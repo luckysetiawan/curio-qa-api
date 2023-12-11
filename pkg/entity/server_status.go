@@ -1,6 +1,6 @@
 package entity
 
 type ServerStatus struct {
-	MongoStatus bool `json:"mongostatus" bson:"mongostatus"`
-	RedisStatus bool `json:"redisstatus" bson:"redisstatus"`
+	MongoStatus bool `json:"mongoStatus" bson:"mongoStatus"`
+	RedisStatus bool `json:"redisStatus" bson:"redisStatus"`
 }
