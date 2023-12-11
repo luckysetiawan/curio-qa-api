@@ -25,6 +25,7 @@ func serverStatusRoutes() {
 }
 
 func userRoutes() {
+	Post("/login", userUseCase.LogIn)
 	Post("/user", userUseCase.Insert)
 }
 

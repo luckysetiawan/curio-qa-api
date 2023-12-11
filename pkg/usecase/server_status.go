@@ -19,8 +19,8 @@ func NewServerStatusUseCase(jsonPresenter webserver.IPresenterJSON, repository r
 	}
 }
 
-func (h *serverStatusUseCase) GetStatus(w http.ResponseWriter, r *http.Request) {
-	result := h.repository.GetServerStatus()
+func (u *serverStatusUseCase) GetStatus(w http.ResponseWriter, r *http.Request) {
+	result := u.repository.GetServerStatus()
 
-	h.jsonPresenter.SendSuccess(w, result)
+	u.jsonPresenter.SendSuccess(w, result)
 }

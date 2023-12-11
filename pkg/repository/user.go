@@ -25,7 +25,10 @@ func NewUserRepository(mongoClient *mongo.Client, redisClient *redis.Client) IUs
 }
 
 func (r *userRepo) CheckUsernameTaken(username string) bool {
-	_, err := r.Find(bson.D{{Key: "username", Value: username}})
+	filter := bson.D{{Key: "username", Value: username}}
+	args := options.FindOne().SetProjection(bson.D{{Key: "password", Value: 0}})
+
+	_, err := r.Find(filter, args)
 	if err != nil {
 		if err != mongo.ErrNoDocuments {
 			// error not caused by "mongo: no documents in result"
@@ -40,14 +43,21 @@ func (r *userRepo) CheckUsernameTaken(username string) bool {
 	return true
 }
 
-func (r *userRepo) Find(filter primitive.D) (entity.User, error) {
+func (r *userRepo) Find(filter primitive.D, args ...*options.FindOneOptions) (entity.User, error) {
 	coll := r.mongoClient.Database("db").Collection("user")
-	opts := options.FindOne().SetProjection(bson.D{{Key: "password", Value: 0}})
 	var user entity.User
 
-	res := coll.FindOne(context.TODO(), filter, opts)
+	opts := options.FindOne()
+	if len(args) > 0 {
+		opts = args[0]
+	}
 
-	err := res.Decode(user)
+	result := coll.FindOne(context.TODO(), filter, opts)
+	if result.Err() != nil {
+		return entity.User{}, result.Err()
+	}
+
+	err := result.Decode(&user)
 	if err != nil {
 		return entity.User{}, err
 	}
