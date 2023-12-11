@@ -23,25 +23,25 @@ func NewUserUseCase(parser parser.IUserParser, jsonPresenter webserver.IPresente
 	}
 }
 
-func (h *userUseCase) Insert(w http.ResponseWriter, r *http.Request) {
-	user, err := h.parser.ParseUserEntity(r)
+func (u *userUseCase) Insert(w http.ResponseWriter, r *http.Request) {
+	user, err := u.parser.ParseUserEntity(r)
 	if err != nil {
-		h.jsonPresenter.SendError(w, constant.ErrorParsingMessage)
+		u.jsonPresenter.SendError(w, constant.ErrorParsingMessage)
 		return
 	}
 
 	// check username availability
-	usernameTaken := h.repository.CheckUsernameTaken(user.Username)
+	usernameTaken := u.repository.CheckUsernameTaken(user.Username)
 	if usernameTaken {
-		h.jsonPresenter.SendError(w, constant.ErrorUsernameTakenMessage)
+		u.jsonPresenter.SendError(w, constant.ErrorUsernameTakenMessage)
 		return
 	}
 
-	insertedID, err := h.repository.Insert(user)
+	insertedID, err := u.repository.Insert(user)
 	if err != nil {
-		h.jsonPresenter.SendError(w, constant.ErrorGeneralMessage)
+		u.jsonPresenter.SendError(w, constant.ErrorGeneralMessage)
 		return
 	}
 
-	h.jsonPresenter.SendSuccess(w, insertedID)
+	u.jsonPresenter.SendSuccess(w, insertedID)
 }
