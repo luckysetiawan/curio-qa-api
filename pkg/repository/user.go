@@ -23,7 +23,6 @@ func NewUserRepository(mongoClient *mongo.Client, redisClient *redis.Client) IUs
 
 func (r *userRepo) Insert(user entity.User) (interface{}, error) {
 	user.Password = util.HashPassword(user.Password)
-	user.Timestamp = util.GetPrimitiveTimestamp()
 
 	coll := r.mongoClient.Database("db").Collection("user")
 
