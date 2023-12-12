@@ -3,9 +3,9 @@ package usecase
 import (
 	"net/http"
 
+	"github.com/luckysetiawan/curio-qa-api/internal/constant"
 	"github.com/luckysetiawan/curio-qa-api/internal/util"
 	"github.com/luckysetiawan/curio-qa-api/internal/webserver"
-	"github.com/luckysetiawan/curio-qa-api/pkg/constant"
 	"github.com/luckysetiawan/curio-qa-api/pkg/parser"
 	"github.com/luckysetiawan/curio-qa-api/pkg/repository"
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,7 +25,7 @@ func NewUserUseCase(parser parser.IUserParser, jsonPresenter webserver.IPresente
 	}
 }
 
-func (u *userUseCase) LogIn(w http.ResponseWriter, r *http.Request) {
+func (u *userUseCase) Login(w http.ResponseWriter, r *http.Request) {
 	user, err := u.parser.ParseUserEntity(r)
 	if err != nil {
 		u.jsonPresenter.SendError(w, constant.ErrorParsingMessage)
@@ -46,7 +46,12 @@ func (u *userUseCase) LogIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: set token
+	webserver.GenerateToken(w, r, data.ID.String(), data.Username, constant.RegisteredUser)
+	u.jsonPresenter.SendSuccess(w)
+}
+
+func (u *userUseCase) Logout(w http.ResponseWriter, r *http.Request) {
+	webserver.ResetToken(w)
 	u.jsonPresenter.SendSuccess(w)
 }
 
