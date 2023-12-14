@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func ParseJSON(r *http.Request, v any) error {
@@ -18,4 +20,10 @@ func ParseJSON(r *http.Request, v any) error {
 	}
 
 	return nil
+}
+
+func ParsePathParam(r *http.Request, s string) string {
+	vars := mux.Vars(r)
+
+	return vars[s]
 }

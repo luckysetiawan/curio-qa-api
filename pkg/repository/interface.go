@@ -6,6 +6,12 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+type ICurioRepository interface {
+	Find(userID, curioID primitive.ObjectID) (entity.Curio, error)
+	Insert(userID primitive.ObjectID, curio entity.Curio) error
+	UpdateStatus(userID, curioID primitive.ObjectID, status bool) error
+}
+
 type IServerStatusRepository interface {
 	GetServerStatus() entity.ServerStatus
 }
