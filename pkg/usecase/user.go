@@ -25,6 +25,16 @@ func NewUserUseCase(parser parser.IUserParser, jsonPresenter webserver.IPresente
 	}
 }
 
+func (u *userUseCase) GetAllActiveUsers(w http.ResponseWriter, r *http.Request) {
+	activeUserIDs, err := u.repository.GetLoginStatuses()
+	if err != nil {
+		u.jsonPresenter.SendError(w, constant.ErrorCacheMessage)
+		return
+	}
+
+	u.jsonPresenter.SendSuccessWithCount(w, activeUserIDs, len(activeUserIDs))
+}
+
 func (u *userUseCase) Login(w http.ResponseWriter, r *http.Request) {
 	user, err := u.parser.ParseUserEntity(r)
 	if err != nil {
@@ -46,11 +56,25 @@ func (u *userUseCase) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	webserver.GenerateToken(w, r, data.ID.String(), data.Username, constant.RegisteredUser)
+	err = u.repository.MarkLoginStatus(data.ID.Hex(), data.Username)
+	if err != nil {
+		u.jsonPresenter.SendError(w, constant.ErrorCacheMessage)
+		return
+	}
+
+	webserver.GenerateToken(w, r, data.ID.Hex(), data.Username, constant.RegisteredUser)
 	u.jsonPresenter.SendSuccess(w)
 }
 
 func (u *userUseCase) Logout(w http.ResponseWriter, r *http.Request) {
+	userID, _ := webserver.GetDataFromCookies(r)
+
+	err := u.repository.ClearLoginStatus(userID)
+	if err != nil {
+		u.jsonPresenter.SendError(w, constant.ErrorCacheMessage)
+		return
+	}
+
 	webserver.ResetToken(w)
 	u.jsonPresenter.SendSuccess(w)
 }

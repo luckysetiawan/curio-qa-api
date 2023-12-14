@@ -2,7 +2,9 @@ package repository
 
 import (
 	"context"
+	"time"
 
+	"github.com/luckysetiawan/curio-qa-api/internal/constant"
 	"github.com/luckysetiawan/curio-qa-api/internal/util"
 	"github.com/luckysetiawan/curio-qa-api/pkg/entity"
 	"github.com/redis/go-redis/v9"
@@ -22,6 +24,15 @@ func NewUserRepository(mongoClient *mongo.Client, redisClient *redis.Client) IUs
 		mongoClient: mongoClient,
 		redisClient: redisClient,
 	}
+}
+
+func (r *userRepo) GetLoginStatuses() ([]string, error) {
+	keys, err := r.redisClient.Keys(context.Background(), "*").Result()
+	if err != nil {
+		return nil, err
+	}
+
+	return keys, nil
 }
 
 func (r *userRepo) CheckUsernameTaken(username string) bool {
@@ -52,7 +63,7 @@ func (r *userRepo) Find(filter primitive.D, args ...*options.FindOneOptions) (en
 		opts = args[0]
 	}
 
-	result := coll.FindOne(context.TODO(), filter, opts)
+	result := coll.FindOne(context.Background(), filter, opts)
 	if result.Err() != nil {
 		return entity.User{}, result.Err()
 	}
@@ -70,7 +81,7 @@ func (r *userRepo) Insert(user entity.User) (interface{}, error) {
 
 	coll := r.mongoClient.Database("db").Collection("user")
 
-	res, err := coll.InsertOne(context.TODO(), user)
+	res, err := coll.InsertOne(context.Background(), user)
 	if err != nil {
 		return nil, err
 	}
@@ -78,4 +89,24 @@ func (r *userRepo) Insert(user entity.User) (interface{}, error) {
 	insertedID := res.InsertedID
 
 	return insertedID, nil
+}
+
+func (r *userRepo) MarkLoginStatus(userID string, username string) error {
+	expiration := constant.TokenExpiryTime * time.Minute
+
+	err := r.redisClient.Set(context.Background(), userID, username, expiration).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r *userRepo) ClearLoginStatus(userID string) error {
+	err := r.redisClient.Del(context.Background(), userID).Err()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

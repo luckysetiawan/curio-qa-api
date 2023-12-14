@@ -21,12 +21,13 @@ var userRepository = repository.NewUserRepository(mongoClient, redisClient)
 var userUseCase = usecase.NewUserUseCase(userParser, jsonPresenter, userRepository)
 
 func serverStatusRoutes() {
-	Get("/status", serverStatusUseCase.GetStatus)
+	Get("/server/status", serverStatusUseCase.GetStatus)
 }
 
 func userRoutes() {
-	Post("/login", userUseCase.Login)
-	Post("/logout", userUseCase.Logout)
+	Get("/user/active", userUseCase.GetAllActiveUsers)
+	Post("/user/login", userUseCase.Login)
+	Post("/user/logout", userUseCase.Logout)
 	Post("/user", userUseCase.Insert)
 }
 

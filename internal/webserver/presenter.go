@@ -32,6 +32,22 @@ func (*jsonPresenter) SendSuccess(w http.ResponseWriter, data ...interface{}) {
 	}
 }
 
+func (*jsonPresenter) SendSuccessWithCount(w http.ResponseWriter, data interface{}, count int) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var response = BaseResponse{
+		Status:  http.StatusOK,
+		Message: constant.SuccessGeneralMessage,
+		Data:    data,
+		Count:   count,
+	}
+
+	err := json.NewEncoder(w).Encode(response)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
 func (*jsonPresenter) SendError(w http.ResponseWriter, message string) {
 	w.Header().Set("Content-Type", "application/json")
 

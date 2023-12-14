@@ -95,3 +95,17 @@ func validateTokenFromCookies(r *http.Request) (bool, string, string, int) {
 	}
 	return false, "", "", -1
 }
+
+func GetDataFromCookies(r *http.Request) (string, string) {
+	if cookie, err := r.Cookie(tokenName); err == nil {
+		accessToken := cookie.Value
+		accessClaims := &Claims{}
+		parsedToken, err := jwt.ParseWithClaims(accessToken, accessClaims, func(accessToken *jwt.Token) (interface{}, error) {
+			return jwtKey, nil
+		})
+		if err == nil && parsedToken.Valid {
+			return accessClaims.ID, accessClaims.Username
+		}
+	}
+	return "", ""
+}

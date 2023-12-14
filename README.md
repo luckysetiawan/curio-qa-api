@@ -58,3 +58,22 @@ Shut down all
 ```
 docker-compose down
 ```
+
+#### Accessing Databases
+
+##### MongoDB
+Using MongoDB Compass
+```
+mongodb://localhost:27017
+```
+
+Access through docker
+```
+docker exec -it mongo /bin/sh
+```
+
+##### Redis
+Access through docker
+```
+docker exec -it redis /bin/sh
+```
