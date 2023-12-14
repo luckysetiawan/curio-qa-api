@@ -36,8 +36,8 @@ func (r *userRepo) GetLoginStatuses() ([]string, error) {
 }
 
 func (r *userRepo) CheckUsernameTaken(username string) bool {
-	filter := bson.D{{Key: "username", Value: username}}
-	args := options.FindOne().SetProjection(bson.D{{Key: "password", Value: 0}})
+	filter := bson.M{"username": username}
+	args := options.FindOne().SetProjection(bson.M{"password": 0})
 
 	_, err := r.Find(filter, args)
 	if err != nil {
@@ -54,7 +54,7 @@ func (r *userRepo) CheckUsernameTaken(username string) bool {
 	return true
 }
 
-func (r *userRepo) Find(filter primitive.D, args ...*options.FindOneOptions) (entity.User, error) {
+func (r *userRepo) Find(filter primitive.M, args ...*options.FindOneOptions) (entity.User, error) {
 	coll := r.mongoClient.Database("db").Collection("user")
 	var user entity.User
 

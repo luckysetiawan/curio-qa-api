@@ -42,7 +42,7 @@ func (u *userUseCase) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter := bson.D{{Key: "username", Value: user.Username}}
+	filter := bson.M{"username": user.Username}
 
 	data, err := u.repository.Find(filter)
 	if err != nil {

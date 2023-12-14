@@ -44,12 +44,8 @@ func (u *curioUseCase) Insert(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Get sender and receiver data from database
-	filter := bson.D{{Key: "username", Value: senderUsername}}
-	args := options.FindOne().SetProjection(bson.D{
-		{Key: "_id", Value: 1},
-		{Key: "displayName", Value: 1},
-		{Key: "username", Value: 1},
-	})
+	filter := bson.M{"username": senderUsername}
+	args := options.FindOne().SetProjection(bson.M{"_id": 1, "displayName": 1, "username": 1})
 
 	sender, err := u.userRepository.Find(filter, args)
 	if err != nil {
@@ -57,8 +53,8 @@ func (u *curioUseCase) Insert(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filter = bson.D{{Key: "username", Value: receiverUsername}}
-	args = options.FindOne().SetProjection(bson.D{{Key: "_id", Value: 1}})
+	filter = bson.M{"username": receiverUsername}
+	args = options.FindOne().SetProjection(bson.M{"_id": 1})
 
 	receiver, err := u.userRepository.Find(filter, args)
 	if err != nil {
