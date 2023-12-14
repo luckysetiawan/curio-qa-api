@@ -77,3 +77,9 @@ Access through docker
 ```
 docker exec -it redis /bin/sh
 ```
+
+## Test Curio QA API
+Run this command and open cover.html
+```
+go test -v -coverprofile cover.out ./... && go tool cover -html cover.out -o cover.html
+```

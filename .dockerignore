@@ -9,3 +9,6 @@ Dockerfile.dev
 # README files
 README.md
 SETUP.md
+
+# Test output files
+cover.html

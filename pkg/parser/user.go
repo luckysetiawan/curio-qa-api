@@ -18,6 +18,7 @@ func (*userParser) ParseUserEntity(r *http.Request) (entity.User, error) {
 		user entity.User
 		err  error
 	)
+
 	err = util.ParseJSON(r, &user)
 	if err != nil {
 		return entity.User{}, err
