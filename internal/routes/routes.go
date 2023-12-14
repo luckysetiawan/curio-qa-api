@@ -38,7 +38,9 @@ func userRoutes() {
 	Post("/login", userUseCase.Login)
 	Post("/logout", userUseCase.Logout)
 
-	Get("/user/active", userUseCase.GetAllActiveUsers)
+	Get("/user/active", userUseCase.GetAllActiveUsers, constant.RegisteredUser)
+	Get("/user", userUseCase.GetAll, constant.RegisteredUser)
+	Get("/user/{username}", userUseCase.Find, constant.RegisteredUser)
 	Post("/user", userUseCase.Insert)
 }
 

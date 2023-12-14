@@ -54,6 +54,36 @@ func (r *userRepo) CheckUsernameTaken(username string) bool {
 	return true
 }
 
+func (r *userRepo) GetAll(filter primitive.M, args ...*options.FindOptions) ([]entity.User, error) {
+	coll := r.mongoClient.Database("db").Collection("user")
+	var users []entity.User
+
+	opts := options.Find()
+	if len(args) > 0 {
+		opts = args[0]
+	}
+
+	cursor, err := coll.Find(context.Background(), filter, opts)
+	if err != nil {
+		return nil, err
+	}
+
+	for cursor.Next(context.Background()) {
+		var user entity.User
+		if err := cursor.Decode(&user); err != nil {
+			return nil, err
+		}
+
+		users = append(users, user)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func (r *userRepo) Find(filter primitive.M, args ...*options.FindOneOptions) (entity.User, error) {
 	coll := r.mongoClient.Database("db").Collection("user")
 	var user entity.User

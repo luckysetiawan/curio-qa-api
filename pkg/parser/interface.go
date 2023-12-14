@@ -14,4 +14,5 @@ type ICurioParser interface {
 
 type IUserParser interface {
 	ParseUserEntity(r *http.Request) (entity.User, error)
+	ParseUsername(r *http.Request) string
 }

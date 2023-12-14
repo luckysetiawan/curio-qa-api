@@ -9,6 +9,7 @@ import (
 	"github.com/luckysetiawan/curio-qa-api/pkg/parser"
 	"github.com/luckysetiawan/curio-qa-api/pkg/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type userUseCase struct {
@@ -23,6 +24,34 @@ func NewUserUseCase(parser parser.IUserParser, jsonPresenter webserver.IPresente
 		jsonPresenter: jsonPresenter,
 		repository:    repository,
 	}
+}
+
+func (u *userUseCase) GetAll(w http.ResponseWriter, r *http.Request) {
+	filter := bson.M{}
+	args := options.Find().SetProjection(bson.M{"password": 0})
+
+	users, err := u.repository.GetAll(filter, args)
+	if err != nil {
+		u.jsonPresenter.SendError(w, constant.ErrorGeneralMessage)
+		return
+	}
+
+	u.jsonPresenter.SendSuccess(w, users)
+}
+
+func (u *userUseCase) Find(w http.ResponseWriter, r *http.Request) {
+	username := u.parser.ParseUsername(r)
+
+	filter := bson.M{"username": username}
+	args := options.FindOne().SetProjection(bson.M{"password": 0})
+
+	user, err := u.repository.Find(filter, args)
+	if err != nil {
+		u.jsonPresenter.SendError(w, constant.ErrorGeneralMessage)
+		return
+	}
+
+	u.jsonPresenter.SendSuccess(w, user)
 }
 
 func (u *userUseCase) GetAllActiveUsers(w http.ResponseWriter, r *http.Request) {

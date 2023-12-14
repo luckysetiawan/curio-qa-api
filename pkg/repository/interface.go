@@ -19,6 +19,7 @@ type IServerStatusRepository interface {
 type IUserRepository interface {
 	GetLoginStatuses() ([]string, error)
 	CheckUsernameTaken(username string) bool
+	GetAll(filter primitive.M, args ...*options.FindOptions) ([]entity.User, error)
 	Find(filter primitive.M, args ...*options.FindOneOptions) (entity.User, error)
 	Insert(user entity.User) (interface{}, error)
 	MarkLoginStatus(userID string, username string) error

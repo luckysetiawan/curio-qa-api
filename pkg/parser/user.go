@@ -25,3 +25,9 @@ func (*userParser) ParseUserEntity(r *http.Request) (entity.User, error) {
 
 	return user, nil
 }
+
+func (*userParser) ParseUsername(r *http.Request) string {
+	ID := util.ParsePathParam(r, "username")
+
+	return ID
+}
