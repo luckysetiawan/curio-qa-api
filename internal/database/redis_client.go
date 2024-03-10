@@ -1,3 +1,5 @@
+// Package database provides the database clients to support the functionality
+// of the server.
 package database
 
 import (
@@ -8,6 +10,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// NewRedisClient returns a redis database client.
 func NewRedisClient() *redis.Client {
 	redisHost := os.Getenv("REDIS_HOST")
 	redisPort := os.Getenv("REDIS_PORT")

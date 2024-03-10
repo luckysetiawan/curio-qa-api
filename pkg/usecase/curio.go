@@ -1,3 +1,4 @@
+// Package usecase stores all usecase logic the server uses.
 package usecase
 
 import (
@@ -12,6 +13,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// curioUseCase stores parser, jsonPresenter, curio repository, user repository
+// and curio logic functions.
 type curioUseCase struct {
 	parser         parser.ICurioParser
 	jsonPresenter  webserver.IPresenterJSON
@@ -19,6 +22,7 @@ type curioUseCase struct {
 	userRepository repository.IUserRepository
 }
 
+// NewCurioUseCase returns curioUseCase struct.
 func NewCurioUseCase(parser parser.ICurioParser, jsonPresenter webserver.IPresenterJSON, repository repository.ICurioRepository, userRepository repository.IUserRepository) *curioUseCase {
 	return &curioUseCase{
 		parser:         parser,
@@ -28,6 +32,7 @@ func NewCurioUseCase(parser parser.ICurioParser, jsonPresenter webserver.IPresen
 	}
 }
 
+// Insert inserts a curio data.
 func (u *curioUseCase) Insert(w http.ResponseWriter, r *http.Request) {
 	// Get data from front end
 	curio, err := u.parser.ParseCurioEntity(r)
@@ -76,6 +81,7 @@ func (u *curioUseCase) Insert(w http.ResponseWriter, r *http.Request) {
 	u.jsonPresenter.SendSuccess(w)
 }
 
+// UpdateStatus updates curio status.
 func (u *curioUseCase) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 	// Get data from front end
 	stringCurioID := u.parser.ParseCurioID(r)

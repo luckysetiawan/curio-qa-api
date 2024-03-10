@@ -1,3 +1,4 @@
+// Package repository stores all database logic the server uses.
 package repository
 
 import (
@@ -10,11 +11,13 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// curioRepo stores mongo client, redis client, and curio logic functions.
 type curioRepo struct {
 	mongoClient *mongo.Client
 	redisClient *redis.Client
 }
 
+// NewCurioRepository returns curioRepo struct.
 func NewCurioRepository(mongoClient *mongo.Client, redisClient *redis.Client) ICurioRepository {
 	return &curioRepo{
 		mongoClient: mongoClient,
@@ -22,6 +25,7 @@ func NewCurioRepository(mongoClient *mongo.Client, redisClient *redis.Client) IC
 	}
 }
 
+// Find finds curio with a certain user ID and curio ID.
 func (r *curioRepo) Find(userID, curioID primitive.ObjectID) (entity.Curio, error) {
 	var (
 		user  entity.User
@@ -46,6 +50,7 @@ func (r *curioRepo) Find(userID, curioID primitive.ObjectID) (entity.Curio, erro
 	return curio, nil
 }
 
+// Insert updates user data with a certain ID, inserts a new curio.
 func (r *curioRepo) Insert(userID primitive.ObjectID, curio entity.Curio) error {
 	coll := r.mongoClient.Database("db").Collection("user")
 	filter := bson.M{"_id": userID}
@@ -59,6 +64,7 @@ func (r *curioRepo) Insert(userID primitive.ObjectID, curio entity.Curio) error 
 	return nil
 }
 
+// UpdateStatus updates curio status.
 func (r *curioRepo) UpdateStatus(userID, curioID primitive.ObjectID, status bool) error {
 	coll := r.mongoClient.Database("db").Collection("user")
 	filter := bson.M{"_id": userID, "curios._id": curioID}

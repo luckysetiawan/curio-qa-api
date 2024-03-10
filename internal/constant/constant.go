@@ -1,14 +1,16 @@
+// Package constants provide constant values that should not change during
+// program execution.
 package constant
 
 import "time"
 
-// Access Type
+// Access Types.
 var RegisteredUser int = 1
 
-// Token Time
-var TokenExpiryTime time.Duration = 60 // in minutes
+// Token Expiration TIme.
+var TokenExpirationTime time.Duration = 60 // in minutes
 
-// JSON Message
+// JSON Message.
 var SuccessGeneralMessage string = "Success!"
 var ErrorGeneralMessage string = "Error!"
 var ErrorParsingMessage string = "Error parsing data!"

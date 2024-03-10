@@ -1,3 +1,4 @@
+// Package webserver provides the necessary functionality to run a server.
 package webserver
 
 import (
@@ -7,6 +8,7 @@ import (
 	"time"
 )
 
+// ListenAndServe runs the server with the configured address and handler.
 func ListenAndServe(port string, handler http.Handler) {
 	s := &http.Server{
 		Addr:           port,
@@ -16,7 +18,7 @@ func ListenAndServe(port string, handler http.Handler) {
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	fmt.Printf("Curio QA Server Running on port %s\n", port)
+	fmt.Printf("Curio QA Server is running on port %s\n", port)
 
 	log.Fatal(s.ListenAndServe())
 }

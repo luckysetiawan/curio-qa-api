@@ -1,3 +1,5 @@
+// Package database provides the database clients to support the functionality
+// of the server.
 package database
 
 import (
@@ -11,6 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
+// NewMongoClient returns a mongo database client.
 func NewMongoClient() *mongo.Client {
 	mongoHost := os.Getenv("MONGO_HOST")
 	mongoPort := os.Getenv("MONGO_PORT")

@@ -1,10 +1,11 @@
+// Package webserver provides the necessary functionality to run a server.
 package webserver
 
 import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-// JSON Web Token Claims
+// JSON web token claims.
 type Claims struct {
 	ID       string `json:"id"`
 	Username string `json:"username"`
@@ -12,7 +13,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// Response
+// Base response struct.
 type BaseResponse struct {
 	Status  int         `json:"status"`
 	Message string      `json:"message"`

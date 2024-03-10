@@ -1,3 +1,4 @@
+// Package webserver provides the necessary functionality to run a server.
 package webserver
 
 import (
@@ -12,6 +13,7 @@ import (
 	"github.com/luckysetiawan/curio-qa-api/internal/util"
 )
 
+// init loads environment variables when the server starts.
 func init() {
 	err := godotenv.Load()
 	if err != nil {
@@ -19,18 +21,20 @@ func init() {
 	}
 }
 
+// JWT key and token name.
 var jwtKey = []byte(os.Getenv("JWT_KEY"))
 var tokenName = "token"
 
+// GenerateToken generates a new token and set the cookie.
 func GenerateToken(w http.ResponseWriter, r *http.Request, id string, username string, userType int) {
-	tokenExpiryTime := time.Now().Add(constant.TokenExpiryTime * time.Minute)
+	tokenExpirationTime := time.Now().Add(constant.TokenExpirationTime * time.Minute)
 
 	claims := &Claims{
 		ID:       id,
 		Username: username,
 		UserType: userType,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(tokenExpiryTime),
+			ExpiresAt: jwt.NewNumericDate(tokenExpirationTime),
 		},
 	}
 
@@ -43,12 +47,13 @@ func GenerateToken(w http.ResponseWriter, r *http.Request, id string, username s
 	http.SetCookie(w, &http.Cookie{
 		Name:     tokenName,
 		Value:    signedToken,
-		Expires:  tokenExpiryTime,
+		Expires:  tokenExpirationTime,
 		Secure:   false,
 		HttpOnly: true,
 	})
 }
 
+// ResetToken clears the token from the cookie.
 func ResetToken(w http.ResponseWriter) {
 	http.SetCookie(w, &http.Cookie{
 		Name:     tokenName,
@@ -59,6 +64,7 @@ func ResetToken(w http.ResponseWriter) {
 	})
 }
 
+// Authenticate checks whether the request is valid.
 func Authenticate(next http.HandlerFunc, accessType []int) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		isValidToken := validateUserToken(r, accessType)
@@ -70,6 +76,7 @@ func Authenticate(next http.HandlerFunc, accessType []int) http.HandlerFunc {
 	})
 }
 
+// validateUserToken checks whether the user type exists in allowed access type.
 func validateUserToken(r *http.Request, accessType []int) bool {
 	isAccessTokenValid, _, _, userType := validateTokenFromCookies(r)
 
@@ -82,6 +89,7 @@ func validateUserToken(r *http.Request, accessType []int) bool {
 	return false
 }
 
+// validateTokenFromCookies gets the token then validate the token.
 func validateTokenFromCookies(r *http.Request) (bool, string, string, int) {
 	if cookie, err := r.Cookie(tokenName); err == nil {
 		accessToken := cookie.Value
@@ -96,6 +104,7 @@ func validateTokenFromCookies(r *http.Request) (bool, string, string, int) {
 	return false, "", "", -1
 }
 
+// GetDataFromCookies returns the ID and username data obtained from cookies.
 func GetDataFromCookies(r *http.Request) (string, string) {
 	if cookie, err := r.Cookie(tokenName); err == nil {
 		accessToken := cookie.Value

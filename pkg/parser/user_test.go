@@ -1,3 +1,4 @@
+// Package parser stores all parsing logic the server uses.
 package parser
 
 import (

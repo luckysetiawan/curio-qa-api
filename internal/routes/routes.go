@@ -1,3 +1,5 @@
+// Package routes compile the necessary packages and handlers with the defined
+// url to be added to the router.
 package routes
 
 import (
@@ -9,11 +11,14 @@ import (
 	"github.com/luckysetiawan/curio-qa-api/pkg/usecase"
 )
 
+// Initialize database clients.
 var mongoClient = database.NewMongoClient()
 var redisClient = database.NewRedisClient()
 
+// Initialize a JSON presenter.
 var jsonPresenter = webserver.NewJsonPresenter()
 
+// Initialize package handlers.
 var curioParser = parser.NewCurioParser()
 var curioRepository = repository.NewCurioRepository(mongoClient, redisClient)
 var curioUseCase = usecase.NewCurioUseCase(curioParser, jsonPresenter, curioRepository, userRepository)
@@ -25,6 +30,7 @@ var userParser = parser.NewUserParser()
 var userRepository = repository.NewUserRepository(mongoClient, redisClient)
 var userUseCase = usecase.NewUserUseCase(userParser, jsonPresenter, userRepository)
 
+// Routes grouping according to the modules.
 func curioRoutes() {
 	Post("/curio/{receiverUsername}", curioUseCase.Insert, constant.RegisteredUser)
 	Put("/curio/{curioID}", curioUseCase.UpdateStatus, constant.RegisteredUser)
@@ -44,6 +50,7 @@ func userRoutes() {
 	Post("/user", userUseCase.Insert)
 }
 
+// init calls all route groups when the server starts.
 func init() {
 	curioRoutes()
 	serverStatusRoutes()

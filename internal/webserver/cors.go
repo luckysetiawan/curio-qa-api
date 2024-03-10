@@ -1,3 +1,4 @@
+// Package webserver provides the necessary functionality to run a server.
 package webserver
 
 import (
@@ -7,6 +8,7 @@ import (
 	"github.com/rs/cors"
 )
 
+// SetCors returns the http handler with the configured cors.
 func SetCors(mux *mux.Router) http.Handler {
 	c := cors.Default()
 
