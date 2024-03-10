@@ -9,11 +9,17 @@ WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download && go mod verify
 
-# Copy the source code
+# Copy the source codes
 COPY ./ ./
+
+# Run go unit tests
+RUN go test -v ./...
+
+# Build executable
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build ./cmd/curio-qa-api
 
 # Set default port the app will listen on
 EXPOSE 8080
 
 # Run
-CMD [ "go", "run", "./cmd/curio-qa-api/main.go" ]
+CMD [ "./curio-qa-api" ]
